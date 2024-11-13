@@ -11,4 +11,4 @@ COPY feature_names.pkl .
 
 EXPOSE 5000
 
-CMD ["python", "app.py"] 
+CMD ["python", "predict.py"] 
