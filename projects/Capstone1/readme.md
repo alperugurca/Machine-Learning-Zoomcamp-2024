@@ -3,85 +3,112 @@
 ## Problem Description
 Traffic accidents are a significant concern in New York, impacting public safety and causing economic losses. This project aims to predict the severity of traffic accidents using various features such as weather conditions, road conditions, and vehicle types. By accurately predicting accident severity, city planners and emergency services can better allocate resources and implement preventive measures.
 
+---
+
 ## Dataset
 - **Source**: [Kaggle - Traffic Accidents in NY 2023](https://www.kaggle.com/datasets/hfan83/traffic-accidents-in-ny-2023/data)
-- **Features**: AccidentID, DateTime, County, WeatherCondition, RoadCondition, VehicleType, SeverityLevel, NumberOfVehicles, NumberOfInjuries, Cause, Junction, Traffic_Signal, Bump
-- **Target Variable**: SeverityLevel
+- **Features**:  
+  - `AccidentID`: Unique identifier for each accident.  
+  - `DateTime`: Date and time of the accident.  
+  - `County`: The county where the accident occurred.  
+  - `WeatherCondition`: Weather conditions at the time of the accident.  
+  - `RoadCondition`: Condition of the road at the time of the accident.  
+  - `VehicleType`: Type of vehicle(s) involved in the accident.  
+  - `SeverityLevel`: The severity level of the accident (target variable).  
+  - `NumberOfVehicles`: Number of vehicles involved in the accident.  
+  - `NumberOfInjuries`: Number of injuries reported.  
+  - `Cause`: Primary cause of the accident.  
+  - `Junction`: Whether the accident occurred at a junction (True/False).  
+  - `Traffic_Signal`: Whether a traffic signal was present (True/False).  
+  - `Bump`: Whether a bump was involved (True/False).  
 
-### Getting the Data
+- **Target Variable**: `SeverityLevel`
 
-bash
-wget https://www.kaggle.com/datasets/hfan83/traffic-accidents-in-ny-2023/data -O data/traffic_accidents_in_NY.csv
+---
 
 ## Project Structure
+- `README.md`: Project documentation.  
+- `notebook.ipynb`: Jupyter notebook with EDA and model development.  
+- `train.py`: Script for training the final model.  
+- `predict.py`: Script for serving predictions.     
+- `Dockerfile`: Dockerfile for containerization.  
+- `requirements.txt`: Project dependencies.  
 
-├── README.md # Project documentation
-├── notebook.ipynb # Jupyter notebook with EDA and model development
-├── train.py # Script for training the final model
-├── predict.py # Script for serving predictions
-├── data/ # Data directory
-├── models/ # Saved model files
-├── Dockerfile # Dockerfile for containerization
-└── requirements.txt # Project dependencies
+---
 
 ## Environment Setup
 
 ### Local Development
-
-bash
-Create virtual environment
-python -m venv venv
-Activate virtual environment
-On Windows:
-venv\Scripts\activate
-On Unix or MacOS:
-source venv/bin/activate
-Install dependencies
-pip install -r requirements.txt
+1. Create a virtual environment:  
+   `python -m venv venv`
+2. Activate the virtual environment:  
+   - On Windows: `venv\Scripts\activate`  
+   - On Unix or MacOS: `source venv/bin/activate`
+3. Install dependencies:  
+   `pip install -r requirements.txt`
 
 ### Using Docker
+1. Build the Docker image:  
+   `docker build -t ny-traffic-predictor .`
+2. Run the container:  
+   `docker run -p 5000:5000 ny-traffic-predictor`
 
-bash
-Build the Docker image
-docker build -t ny-traffic-predictor .
-Run the container
-docker run -p 5000:5000 ny-traffic-predictor
-
+---
 
 ## Model Development
 
-### Exploratory Data Analysis
-- Data cleaning and preparation
-- Feature analysis and importance
-- Target variable distribution
+### Exploratory Data Analysis (EDA)
+- Data cleaning and preparation: Handle missing values, inconsistent formats, and outliers.  
+- Feature analysis and importance: Explore relationships between features and the target variable.  
+- Target variable distribution: Analyze the distribution of `SeverityLevel` to handle class imbalance if needed.
 
 ### Model Training
-- Models evaluated: Random Forest, XGBoost, Neural Network
-- Hyperparameter tuning using Optuna
-- Final model: Random Forest with best parameters
+1. Models Evaluated:
+   - Random Forest  
+   - XGBoost  
+   - Neural Network  
+2. Hyperparameter tuning: Optimized using Optuna.  
+3. Final Model: Random Forest with the best parameters achieved optimal performance.
+
+---
 
 ## Running the Project
 
 ### Training the Model
-
-bash
-python train.py
-
+Run the following command to train the model:  
+`python train.py`
 
 ### Making Predictions
+Run the following command to serve predictions:  
+`python predict.py`
 
-bash
-python predict.py
-
-
-## API Documentation
+---
 
 ### Prediction Endpoint
+The prediction endpoint accepts POST requests with accident details in JSON format.  
 
-bash
+### Example Request:
+```bash
 curl -X POST -H "Content-Type: application/json" \
--d '{"County": "Queens", "WeatherCondition": "Rainy", "RoadCondition": "Dry", "VehicleType": "Car", "Cause": "Drunk Driving", "Junction": false, "Traffic_Signal": true, "Bump": false}' \
+-d '{
+  "County": "Queens", 
+  "WeatherCondition": "Rainy", 
+  "RoadCondition": "Dry", 
+  "VehicleType": "Car", 
+  "Cause": "Drunk Driving", 
+  "Junction": false, 
+  "Traffic_Signal": true, 
+  "Bump": false
+}' \
 http://localhost:5000/predict
+```
 
 
+### Example Response:
+```json
+{
+  "SeverityLevel": "High"
+}
+```
 
+![Flask](1.jpg)
