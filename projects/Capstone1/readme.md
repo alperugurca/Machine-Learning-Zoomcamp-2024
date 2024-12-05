@@ -111,4 +111,4 @@ http://localhost:5000/predict
 }
 ```
 
-![Flask](1.jpg)
+![Flask](flask.jpg)
